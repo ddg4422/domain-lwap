@@ -4,6 +4,7 @@
 
 	// Main.
 		var	on = addEventListener,
+			off = removeEventListener,
 			$ = function(q) { return document.querySelector(q) },
 			$$ = function(q) { return document.querySelectorAll(q) },
 			$body = document.body,
@@ -476,20 +477,32 @@
 				window._scrollToTop = scrollToTop;
 	
 	// "On Load" animation.
-		on('load', function() {
-			setTimeout(function() {
-		
-				$body.classList.remove('is-loading');
-				$body.classList.add('is-playing');
-		
+		// Create load handler.
+			var loadHandler = function() {
 				setTimeout(function() {
 		
-					$body.classList.remove('is-playing');
-					$body.classList.add('is-ready');
+					// Unmark as loading.
+						$body.classList.remove('is-loading');
 		
-				}, 2000);
-			}, 100);
-		});
+					// Mark as playing.
+						$body.classList.add('is-playing');
+		
+					// Wait for animation complete.
+						setTimeout(function() {
+		
+							// Unmark as playing.
+								$body.classList.remove('is-playing');
+		
+							// Mark as ready.
+								$body.classList.add('is-ready');
+		
+						}, 2000);
+		
+				}, 100);
+			};
+		
+		// Load event.
+			on('load', loadHandler);
 	
 	// Sections.
 		(function() {
@@ -511,6 +524,35 @@
 					}
 		
 					return target;
+		
+				},
+				scrollPointSpeed = function(scrollPoint) {
+		
+					let x = parseInt(scrollPoint.dataset.scrollSpeed);
+		
+					switch (x) {
+		
+						case 1:
+							return 250;
+		
+						case 2:
+							return 500;
+		
+						case 3:
+							return 750;
+		
+						case 4:
+							return 1000;
+		
+						case 5:
+							return 1250;
+		
+						default:
+							break;
+		
+					}
+		
+					return 750;
 		
 				},
 				doNextScrollPoint = function(event) {
@@ -548,7 +590,7 @@
 		
 					// Redirect.
 						if (target.dataset.scrollInvisible == '1')
-							scrollToElement(target);
+							scrollToElement(target, 'smooth', scrollPointSpeed(target));
 						else
 							location.href = '#' + id;
 		
@@ -588,7 +630,7 @@
 		
 					// Redirect.
 						if (target.dataset.scrollInvisible == '1')
-							scrollToElement(target);
+							scrollToElement(target, 'smooth', scrollPointSpeed(target));
 						else
 							location.href = '#' + id;
 		
@@ -627,7 +669,7 @@
 		
 					// Redirect.
 						if (target.dataset.scrollInvisible == '1')
-							scrollToElement(target);
+							scrollToElement(target, 'smooth', scrollPointSpeed(target));
 						else
 							location.href = '#' + id;
 		
@@ -666,7 +708,7 @@
 		
 					// Redirect.
 						if (target.dataset.scrollInvisible == '1')
-							scrollToElement(target);
+							scrollToElement(target, 'smooth', scrollPointSpeed(target));
 						else
 							location.href = '#' + id;
 		
@@ -764,7 +806,7 @@
 		
 							// Scroll to scroll point (if applicable).
 								if (scrollPoint)
-									scrollToElement(scrollPoint);
+									scrollToElement(scrollPoint, 'smooth', scrollPointSpeed(scrollPoint));
 		
 							// Otherwise, just scroll to top (if not disabled for this section).
 								else if (!disableAutoScroll)
@@ -1126,7 +1168,7 @@
 											else {
 		
 												// Scroll to scroll point.
-													scrollToElement(scrollPoint);
+													scrollToElement(scrollPoint, 'smooth', scrollPointSpeed(scrollPoint));
 		
 											}
 		
@@ -2446,7 +2488,6 @@
 	// Initialize "On Visible" animations.
 		onvisible.add('h1.style1, h2.style1, h3.style1, p.style1', { style: 'fade-up', speed: 1000, intensity: 0, delay: 125, staggerOrder: '', replay: false });
 		onvisible.add('h1.style2, h2.style2, h3.style2, p.style2', { style: 'fade-up', speed: 1000, intensity: 0, delay: 250, staggerOrder: '', replay: false });
-		onvisible.add('form.style1', { style: 'fade-up', speed: 1000, intensity: 0, delay: 375, staggerOrder: '', replay: false });
 		onvisible.add('h1.style3, h2.style3, h3.style3, p.style3', { style: 'fade-up', speed: 1000, intensity: 0, delay: 500, staggerOrder: '', replay: false });
 		onvisible.add('.buttons.style1', { style: 'fade-up', speed: 1000, intensity: 0, delay: 375, replay: false });
 
